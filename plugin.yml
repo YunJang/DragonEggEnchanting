@@ -1,8 +1,10 @@
 name: DragonEggEnchanting
 main: me.Bahamut.DragonEggEnchanting.DragonEggEnchantingPlugin
 description: Enchant your items past their limitations with Dragon Eggs!
-version: 1.0.0
+version: 1.1.0
 author: Bahamut
 commands:
   dragonegg:
     description: Consumes a Dragon Egg for a chance to raise a random enchantment on the item in your hand.
+  degg:
+    description: Alias for the 'dragonegg' command.

@@ -26,7 +26,7 @@ public class DragonEggEnchantingPlugin extends JavaPlugin
 
     public boolean onCommand (CommandSender sender, Command cmd, String s, String[] args)
     {
-        if (cmd.getName().equalsIgnoreCase("dragonegg"))
+        if (cmd.getName().equalsIgnoreCase("dragonegg") || cmd.getName().equalsIgnoreCase("degg"))
         {
             logic.upgradeItem(sender);
             return true;

@@ -1,15 +1,13 @@
 package me.Bahamut.DragonEggEnchanting;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Yun on 3/6/2015.
@@ -36,6 +34,19 @@ public class DragonEggEnchantingLogic
         put (Enchantment.THORNS, 10);
     };};
 
+    private static HashMap<Integer, Integer> successTable = new HashMap<Integer, Integer>() {{
+        put (1, 100);
+        put (2, 100);
+        put (3, 100);
+        put (4, 100);
+        put (5, 100);
+        put (6, 50);
+        put (7, 40);
+        put (8, 30);
+        put (9, 20);
+        put (10, 10);
+    };};
+
     public DragonEggEnchantingLogic (DragonEggEnchantingPlugin plugin)
     {
         this.plugin = plugin;
@@ -57,14 +68,12 @@ public class DragonEggEnchantingLogic
             List<Enchantment> availableEnchantments = getAvailableUpgrades(handItem);
             if (!availableEnchantments.isEmpty())
             {
-                incrementAvailableUpgrade(handItem, availableEnchantments);
-                // removeRequirements (player);
+                incrementAvailableUpgrade(sender, handItem, availableEnchantments);
+                removeRequirements (player);
             }
-            else
-            {
-                sender.sendMessage("[Dragon Egg] " + handItem.getType().name() + " has no enchantments or is maxed out!");
-            }
+            else sender.sendMessage("[Dragon Egg] " + handItem.getType().name() + " has no enchantments or is maxed out!");
         }
+        else sender.sendMessage("[Dragon Egg] You don't have enough eggs or levels!");
     }
 
     /*
@@ -83,11 +92,36 @@ public class DragonEggEnchantingLogic
     }
 
     /*
-        Go through the enchantments on the item,
+        Go through the enchantments on the item, pick a random one,
+        and give a chance to upgrade the enchantment to the next level.
+        The higher the level of the enchantment, the lower the chance.
      */
-    public void incrementAvailableUpgrade (ItemStack handItem, List<Enchantment> availableEnchantments)
+    public void incrementAvailableUpgrade (CommandSender sender, ItemStack handItem, List<Enchantment> availableEnchantments)
     {
-        for (int i = 0; i < availableEnchantments.size(); ++i)
-            plugin.getLogger().info(availableEnchantments.get(i).getName());
+        Random random = new Random();
+        int randomIndex = random.nextInt(availableEnchantments.size());
+        Enchantment randomEnchantment = availableEnchantments.get(randomIndex);
+        int enchantmentLevel = handItem.getEnchantmentLevel(randomEnchantment);
+        int randomValue = random.nextInt(100) + 1;
+        if (randomValue <= successTable.get(enchantmentLevel))
+        {
+            handItem.addUnsafeEnchantment(randomEnchantment, handItem.getEnchantmentLevel(randomEnchantment) + 1);
+            sender.sendMessage("[Dragon Egg] Success! " + randomEnchantment.getName() + " " + enchantmentLevel + " increased to " + (enchantmentLevel + 1) + "!");
+        }
+        else sender.sendMessage("[Dragon Egg] " + randomEnchantment.getName() + " " + enchantmentLevel + " did not increase in level.");
+    }
+
+    /*
+        Remove a Dragon Egg and Levels as requirement.
+     */
+    public void removeRequirements (Player player)
+    {
+        int eggIndex = player.getInventory().first(Material.DRAGON_EGG);
+        ItemStack eggStack = player.getInventory().getItem(eggIndex);
+        int newAmount = (eggStack.getAmount() - 1 > 0) ? eggStack.getAmount() - 1 : 0;
+        eggStack.setAmount(newAmount);
+        player.getInventory().setItem(eggIndex, eggStack);
+        player.updateInventory();
+        player.setLevel(player.getLevel() - 50);
     }
 }
