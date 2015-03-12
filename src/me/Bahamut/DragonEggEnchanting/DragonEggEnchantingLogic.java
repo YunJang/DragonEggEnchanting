@@ -40,17 +40,14 @@ public class DragonEggEnchantingLogic
         put (3, 100);
         put (4, 100);
         put (5, 100);
-        put (6, 50);
-        put (7, 40);
-        put (8, 30);
-        put (9, 20);
-        put (10, 10);
+        put (6, 70);
+        put (7, 60);
+        put (8, 50);
+        put (9, 40);
+        put (10, 30);
     };};
 
-    public DragonEggEnchantingLogic (DragonEggEnchantingPlugin plugin)
-    {
-        this.plugin = plugin;
-    }
+    public DragonEggEnchantingLogic (DragonEggEnchantingPlugin plugin) { this.plugin = plugin; }
 
     /*
         Gives the user a chance to upgrade a random enchantment on the item
@@ -58,22 +55,22 @@ public class DragonEggEnchantingLogic
         the upgrade will succeed. If the item already contains maxed out enchantments
         (which is currently 10), then the upgrade will not execute.
      */
-    public void upgradeItem (CommandSender sender)
+    public void upgradeItem (CommandSender sender, Material material, int level, String matName, int successPenalty)
     {
         Player player = ((Player) sender).getPlayer();
-        if (player.getInventory().contains(Material.DRAGON_EGG) && player.getLevel() >= 50)
+        if (player.getInventory().contains(material) && player.getLevel() >= level)
         {
             ItemStack handItem = player.getItemInHand();
-            sender.sendMessage("[Dragon Egg] Attempting to enchant " + handItem.getType().name() + ".");
+            sender.sendMessage("[" + matName + "] Attempting to enchant " + handItem.getType().name() + ".");
             List<Enchantment> availableEnchantments = getAvailableUpgrades(handItem);
             if (!availableEnchantments.isEmpty())
             {
-                incrementAvailableUpgrade(sender, handItem, availableEnchantments);
-                removeRequirements (player);
+                incrementAvailableUpgrade(sender, handItem, availableEnchantments, matName, successPenalty);
+                removeRequirements (player, material, level);
             }
-            else sender.sendMessage("[Dragon Egg] " + handItem.getType().name() + " has no enchantments or is maxed out!");
+            else sender.sendMessage("[" + matName + "] " + handItem.getType().name() + " has no enchantments or is maxed out!");
         }
-        else sender.sendMessage("[Dragon Egg] You don't have enough eggs or levels!");
+        else sender.sendMessage("[" + matName + "] You don't have enough " + matName + "s or Levels!");
     }
 
     /*
@@ -95,33 +92,36 @@ public class DragonEggEnchantingLogic
         Go through the enchantments on the item, pick a random one,
         and give a chance to upgrade the enchantment to the next level.
         The higher the level of the enchantment, the lower the chance.
+
+        Depending on the material used for upgrade, a success penalty with
+        be applied as some materials are easier to grind out than others.
      */
-    public void incrementAvailableUpgrade (CommandSender sender, ItemStack handItem, List<Enchantment> availableEnchantments)
+    public void incrementAvailableUpgrade (CommandSender sender, ItemStack handItem, List<Enchantment> availableEnchantments, String matName, int successPenalty)
     {
         Random random = new Random();
         int randomIndex = random.nextInt(availableEnchantments.size());
         Enchantment randomEnchantment = availableEnchantments.get(randomIndex);
         int enchantmentLevel = handItem.getEnchantmentLevel(randomEnchantment);
         int randomValue = random.nextInt(100) + 1;
-        if (randomValue <= successTable.get(enchantmentLevel))
+        if (randomValue <= successTable.get(enchantmentLevel) / successPenalty)
         {
             handItem.addUnsafeEnchantment(randomEnchantment, handItem.getEnchantmentLevel(randomEnchantment) + 1);
-            sender.sendMessage("[Dragon Egg] Success! " + randomEnchantment.getName() + " " + enchantmentLevel + " increased to " + (enchantmentLevel + 1) + "!");
+            sender.sendMessage("[" + matName + "] Success! " + randomEnchantment.getName() + " " + enchantmentLevel + " increased to " + (enchantmentLevel + 1) + "!");
         }
-        else sender.sendMessage("[Dragon Egg] " + randomEnchantment.getName() + " " + enchantmentLevel + " did not increase in level.");
+        else sender.sendMessage("[" + matName + "] " + randomEnchantment.getName() + " " + enchantmentLevel + " did not increase in level.");
     }
 
     /*
-        Remove a Dragon Egg and Levels as requirement.
+        Remove the requested material and levels.
      */
-    public void removeRequirements (Player player)
+    public void removeRequirements (Player player, Material material, int level)
     {
-        int eggIndex = player.getInventory().first(Material.DRAGON_EGG);
-        ItemStack eggStack = player.getInventory().getItem(eggIndex);
-        int newAmount = (eggStack.getAmount() - 1 > 0) ? eggStack.getAmount() - 1 : 0;
-        eggStack.setAmount(newAmount);
-        player.getInventory().setItem(eggIndex, eggStack);
+        int itemIndex = player.getInventory().first(material);
+        ItemStack itemStack = player.getInventory().getItem(itemIndex);
+        int newAmount = (itemStack.getAmount() - 1 > 0) ? itemStack.getAmount() - 1 : 0;
+        itemStack.setAmount(newAmount);
+        player.getInventory().setItem(itemIndex, itemStack);
         player.updateInventory();
-        player.setLevel(player.getLevel() - 50);
+        player.setLevel(player.getLevel() - level);
     }
 }

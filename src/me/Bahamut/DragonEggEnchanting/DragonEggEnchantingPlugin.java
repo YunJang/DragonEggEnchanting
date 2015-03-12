@@ -1,5 +1,6 @@
 package me.Bahamut.DragonEggEnchanting;
 
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,9 +27,15 @@ public class DragonEggEnchantingPlugin extends JavaPlugin
 
     public boolean onCommand (CommandSender sender, Command cmd, String s, String[] args)
     {
-        if (cmd.getName().equalsIgnoreCase("dragonegg") || cmd.getName().equalsIgnoreCase("degg"))
+        if (cmd.getName().equalsIgnoreCase("upgrade") || cmd.getName().equalsIgnoreCase("up"))
         {
-            logic.upgradeItem(sender);
+            if (args.length > 0)
+            {
+                if (args[0].equalsIgnoreCase("emerald"))        logic.upgradeItem(sender, Material.EMERALD_BLOCK, 30, "Emerald", 2);
+                else if (args[0].equalsIgnoreCase("dragonegg")) logic.upgradeItem(sender, Material.DRAGON_EGG, 50, "Dragon Egg", 1);
+                else if (args.length == 0)                      sender.sendMessage("Usage: /" + cmd.getName().toLowerCase() + " <emerald/dragonegg>");
+            }
+            else sender.sendMessage("Usage: /" + cmd.getName().toLowerCase() + " <emerald/dragonegg>");
             return true;
         }
 
