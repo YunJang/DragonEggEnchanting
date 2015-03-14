@@ -1,5 +1,6 @@
 package me.Bahamut.DragonEggEnchanting;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -15,39 +16,13 @@ import java.util.*;
 public class DragonEggEnchantingLogic
 {
     private final DragonEggEnchantingPlugin plugin;
-    private static HashMap<Enchantment, Integer> validEnchantments = new HashMap<Enchantment, Integer>() {{
-        put (Enchantment.ARROW_DAMAGE, 10);
-        put (Enchantment.DAMAGE_ALL, 10);
-        put (Enchantment.DAMAGE_ARTHROPODS, 10);
-        put (Enchantment.DAMAGE_UNDEAD, 10);
-        put (Enchantment.DIG_SPEED, 10);
-        put (Enchantment.DURABILITY, 10);
-        put (Enchantment.LOOT_BONUS_BLOCKS, 10);
-        put (Enchantment.LOOT_BONUS_MOBS, 10);
-        put (Enchantment.LUCK, 10);
-        put (Enchantment.LURE, 8);
-        put (Enchantment.PROTECTION_ENVIRONMENTAL, 10);
-        put (Enchantment.PROTECTION_EXPLOSIONS, 10);
-        put (Enchantment.PROTECTION_FALL, 10);
-        put (Enchantment.PROTECTION_FIRE, 10);
-        put (Enchantment.PROTECTION_PROJECTILE, 10);
-        put (Enchantment.THORNS, 10);
-    };};
+    private static String pluginName;
 
-    private static HashMap<Integer, Integer> successTable = new HashMap<Integer, Integer>() {{
-        put (1, 100);
-        put (2, 100);
-        put (3, 100);
-        put (4, 100);
-        put (5, 100);
-        put (6, 70);
-        put (7, 60);
-        put (8, 50);
-        put (9, 40);
-        put (10, 30);
-    };};
-
-    public DragonEggEnchantingLogic (DragonEggEnchantingPlugin plugin) { this.plugin = plugin; }
+    public DragonEggEnchantingLogic (DragonEggEnchantingPlugin plugin)
+    {
+        this.plugin = plugin;
+        pluginName = BetterEnchantingColor.aqua("[Enchanter] ");
+    }
 
     /*
         Gives the user a chance to upgrade a random enchantment on the item
@@ -61,16 +36,17 @@ public class DragonEggEnchantingLogic
         if (player.getInventory().contains(material) && player.getLevel() >= level)
         {
             ItemStack handItem = player.getItemInHand();
-            sender.sendMessage("[" + matName + "] Attempting to enchant " + handItem.getType().name() + ".");
+            String itemName = BetterEnchantingMapper.materialConversionMap.get(handItem.getData().getItemType());
+            sender.sendMessage(pluginName + "Attempting to enchant " + BetterEnchantingColor.green(itemName) + ".");
             List<Enchantment> availableEnchantments = getAvailableUpgrades(handItem);
             if (!availableEnchantments.isEmpty())
             {
                 incrementAvailableUpgrade(sender, handItem, availableEnchantments, matName, successPenalty);
                 removeRequirements (player, material, level);
             }
-            else sender.sendMessage("[" + matName + "] " + handItem.getType().name() + " has no enchantments or is maxed out!");
+            else sender.sendMessage(pluginName + BetterEnchantingColor.green(itemName) + " has no enchantments or is maxed out!");
         }
-        else sender.sendMessage("[" + matName + "] You don't have enough " + matName + "s or Levels!");
+        else sender.sendMessage(pluginName + "You don't have enough " + matName + "s or Levels!");
     }
 
     /*
@@ -83,7 +59,7 @@ public class DragonEggEnchantingLogic
         List<Enchantment> availableEnchantments = new ArrayList<Enchantment>();
         Map<Enchantment, Integer> enchantments = handItem.getEnchantments();
         for (Enchantment name : enchantments.keySet())
-            if (validEnchantments.containsKey(name) && handItem.getEnchantmentLevel(name) < validEnchantments.get(name))
+            if (BetterEnchantingMapper.validEnchantments.containsKey(name) && handItem.getEnchantmentLevel(name) < BetterEnchantingMapper.validEnchantments.get(name))
                 availableEnchantments.add(name);
         return availableEnchantments;
     }
@@ -101,14 +77,16 @@ public class DragonEggEnchantingLogic
         Random random = new Random();
         int randomIndex = random.nextInt(availableEnchantments.size());
         Enchantment randomEnchantment = availableEnchantments.get(randomIndex);
+        String enchantmentName = BetterEnchantingMapper.enchantmentConversionMap.get(randomEnchantment);
         int enchantmentLevel = handItem.getEnchantmentLevel(randomEnchantment);
+
         int randomValue = random.nextInt(100) + 1;
-        if (randomValue <= successTable.get(enchantmentLevel) / successPenalty)
+        if (randomValue <= BetterEnchantingMapper.successTable.get(enchantmentLevel) / successPenalty)
         {
             handItem.addUnsafeEnchantment(randomEnchantment, handItem.getEnchantmentLevel(randomEnchantment) + 1);
-            sender.sendMessage("[" + matName + "] Success! " + randomEnchantment.getName() + " " + enchantmentLevel + " increased to " + (enchantmentLevel + 1) + "!");
+            sender.sendMessage(pluginName + "Success! " + BetterEnchantingColor.green(enchantmentName) + " " + BetterEnchantingColor.green(enchantmentLevel + "") + " increased to " + BetterEnchantingColor.gold((enchantmentLevel + 1) + "") + "!");
         }
-        else sender.sendMessage("[" + matName + "] " + randomEnchantment.getName() + " " + enchantmentLevel + " did not increase in level.");
+        else sender.sendMessage(pluginName + BetterEnchantingColor.green(enchantmentName) + " " + BetterEnchantingColor.gold(enchantmentLevel + "") + " did not increase in level.");
     }
 
     /*
