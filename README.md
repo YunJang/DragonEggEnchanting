@@ -1,6 +1,6 @@
 # DragonEggEnchanting - 1.8.x
 
-Current Version: 1.2.5
+Current Version: 1.3.0
 
 Written for our personal Minecraft server that is running Spigot 1.8.x. Spigot 1.8.1 API was used but it should work as long as Minecraft remains on version 1.8.
 
@@ -12,14 +12,8 @@ Usage:
 
 Features:
 - Enhance your equipment past the default enchantment levels (such as Efficiency V) by using certain materials and levels.
-- The higher the level of your current enchantment, the lower the chance of success!
-	- Level 1 ~ 5: 100%
-	- Level 6: 70%
-	- Level 7: 60%
-	- Level 8: 50%
-	- Level 9: 40%
-	- Level 10: 30%
-- Following Enchantments are obtainable:
+- Rates are modifiable. But typically you'll want lower levels to be more likely to succeed than higher levels!
+- Following Enchantments are obtainable (but also modifiable):
 	- Power X
 	- Sharpness X
 	- Bane of Arthopods X
@@ -38,12 +32,14 @@ Features:
 	- Thorns X
 
 To-Do List:
-- Add support for more enchantments after making sure it doesn't break the game.
-- Add a configuration file support.
-- Not specific to the plugin, but make conversion and color files that is a class of its own to be used in my other plugins.
 - Change the name of the plugin to BetterEnchanting.
+- Add configuration support to handle more material addition along with success penalties.
 
 Changelog:
+- Version 1.3.0
+    - Configuration support added to allow easier addition of enchantments and modifications to value tables.
+    - Commands added:
+        - /upgraderates: gives base success rates.
 - Version 1.2.5
     - Color context! Hooray!
     - Enchantment names are now properly shown.

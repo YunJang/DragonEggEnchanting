@@ -59,7 +59,7 @@ public class DragonEggEnchantingLogic
         List<Enchantment> availableEnchantments = new ArrayList<Enchantment>();
         Map<Enchantment, Integer> enchantments = handItem.getEnchantments();
         for (Enchantment name : enchantments.keySet())
-            if (BetterEnchantingMapper.validEnchantments.containsKey(name) && handItem.getEnchantmentLevel(name) < BetterEnchantingMapper.validEnchantments.get(name))
+            if (BetterEnchantingMapper.enchantmentTable.containsKey(name) && handItem.getEnchantmentLevel(name) < BetterEnchantingMapper.enchantmentTable.get(name))
                 availableEnchantments.add(name);
         return availableEnchantments;
     }

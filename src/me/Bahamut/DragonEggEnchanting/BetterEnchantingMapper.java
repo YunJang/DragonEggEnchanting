@@ -3,6 +3,8 @@ package me.Bahamut.DragonEggEnchanting;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,37 +12,28 @@ import java.util.HashMap;
  */
 public class BetterEnchantingMapper
 {
-    public static HashMap<Integer, Integer> successTable = new HashMap<Integer, Integer>() {{
-        put (1, 100);
-        put (2, 100);
-        put (3, 100);
-        put (4, 100);
-        put (5, 100);
-        put (6, 70);
-        put (7, 60);
-        put (8, 50);
-        put (9, 40);
-        put (10, 30);
-    };};
+    public static HashMap<Integer, Integer> successTable = new HashMap<Integer, Integer>();
+    public static HashMap<Enchantment, Integer> enchantmentTable = new HashMap<Enchantment, Integer>();
 
-    public static HashMap<Enchantment, Integer> validEnchantments = new HashMap<Enchantment, Integer>() {{
-        put (Enchantment.ARROW_DAMAGE, 10);
-        put (Enchantment.DAMAGE_ALL, 10);
-        put (Enchantment.DAMAGE_ARTHROPODS, 10);
-        put (Enchantment.DAMAGE_UNDEAD, 10);
-        put (Enchantment.DIG_SPEED, 10);
-        put (Enchantment.DURABILITY, 10);
-        put (Enchantment.LOOT_BONUS_BLOCKS, 10);
-        put (Enchantment.LOOT_BONUS_MOBS, 10);
-        put (Enchantment.LUCK, 10);
-        put (Enchantment.LURE, 8);
-        put (Enchantment.PROTECTION_ENVIRONMENTAL, 10);
-        put (Enchantment.PROTECTION_EXPLOSIONS, 10);
-        put (Enchantment.PROTECTION_FALL, 10);
-        put (Enchantment.PROTECTION_FIRE, 10);
-        put (Enchantment.PROTECTION_PROJECTILE, 10);
-        put (Enchantment.THORNS, 10);
-    };};
+    public static void loadSuccessTable (ArrayList successList)
+    {
+        for (int i = 0; i < successList.size(); ++i)
+            successTable.put(i + 1, (Integer) successList.get(i));
+    }
+
+    public static void loadValidEnchantmentTable (ArrayList enchantList, ArrayList levelList)
+    {
+        for (int i = 0; i < enchantList.size(); ++i)
+            enchantmentTable.put(Enchantment.getByName((String) enchantList.get(i)), (Integer) levelList.get(i));
+    }
+
+    public static String displayRates ()
+    {
+        StringBuilder sb = new StringBuilder ();
+        for (Integer level : successTable.keySet())
+            sb.append(BetterEnchantingColor.green("Level " + level.toString()) + ": " + BetterEnchantingColor.gold("" + successTable.get(level) + "%") + "\n");
+        return sb.toString();
+    }
 
     public static HashMap<Enchantment, String> enchantmentConversionMap = new HashMap<Enchantment, String>() {{
         put (Enchantment.ARROW_DAMAGE, "Power");

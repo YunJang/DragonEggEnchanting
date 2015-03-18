@@ -1,0 +1,49 @@
+# Add a level line for each enchantment added to this table.
+# Uses CraftBukkit's enchantment names.
+enchant_table:
+  - ARROW_DAMAGE
+  - DAMAGE_ALL
+  - DAMAGE_ARTHROPODS
+  - DAMAGE_UNDEAD
+  - DIG_SPEED
+  - DURABILITY
+  - LOOT_BONUS_BLOCKS
+  - LOOT_BONUS_MOBS
+  - LUCK
+  - LURE
+  - PROTECTION_ENVIRONMENTAL
+  - PROTECTION_EXPLOSIONS
+  - PROTECTION_FALL
+  - PROTECTION_FIRE
+  - PROTECTION_PROJECTILE
+  - THORNS
+# Each line correlates to each enchantment in the table above.
+level_table:
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 8
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+  - 10
+# Each line correlates to a level.
+success_table:
+  - 100
+  - 100
+  - 100
+  - 100
+  - 100
+  - 70
+  - 60
+  - 50
+  - 40
+  - 30
