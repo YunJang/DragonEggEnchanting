@@ -3,7 +3,6 @@ package me.Bahamut.DragonEggEnchanting;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,7 +30,7 @@ public class BetterEnchantingMapper
     {
         StringBuilder sb = new StringBuilder ();
         for (Integer level : successTable.keySet())
-            sb.append(BetterEnchantingColor.green("Level " + level.toString()) + ": " + BetterEnchantingColor.gold("" + successTable.get(level) + "%") + "\n");
+            sb.append(yjColor.aqua("[Enchanter] ") + yjColor.green("Level " + level.toString()) + ": " + yjColor.gold("" + successTable.get(level) + "%") + "\n");
         return sb.toString();
     }
 

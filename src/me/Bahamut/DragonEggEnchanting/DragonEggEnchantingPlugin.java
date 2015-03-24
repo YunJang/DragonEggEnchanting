@@ -40,18 +40,22 @@ public class DragonEggEnchantingPlugin extends JavaPlugin
     {
         if (cmd.getName().equalsIgnoreCase("upgrade") || cmd.getName().equalsIgnoreCase("up"))
         {
-            if (args.length > 0)
+            if (args.length == 2)
             {
-                if (args[0].equalsIgnoreCase("emerald"))        logic.upgradeItem(sender, Material.EMERALD_BLOCK, 30, "Emerald", 2);
-                else if (args[0].equalsIgnoreCase("dragonegg")) logic.upgradeItem(sender, Material.DRAGON_EGG, 50, "Dragon Egg", 1);
-                else if (args.length == 0)                      sender.sendMessage("Usage: /" + cmd.getName().toLowerCase() + " <emerald/dragonegg>");
+                try
+                {
+                    int index = Integer.parseInt(args[1]);
+                    if (args[0].equalsIgnoreCase("emerald"))        logic.doUpgrade(sender, Material.EMERALD_BLOCK, 30, "Emerald", 2, index);
+                    else if (args[0].equalsIgnoreCase("dragonegg")) logic.doUpgrade(sender, Material.DRAGON_EGG, 50, "Dragon Egg", 1, index);
+                }
+                catch (NumberFormatException e) { sender.sendMessage(yjColor.aqua("[Enchanter] ") + "Index value is invalid! Please enter an integer."); }
             }
-            else sender.sendMessage("Usage: /" + cmd.getName().toLowerCase() + " <emerald/dragonegg>");
+            else logic.showAvailableUpgrades(sender);
             return true;
         }
         else if (cmd.getName().equalsIgnoreCase("upgraderates"))
         {
-            sender.sendMessage(BetterEnchantingColor.aqua("[Current Base Rates]"));
+            sender.sendMessage(yjColor.aqua("[Enchanter] ") + "The current base rates are:");
             sender.sendMessage(BetterEnchantingMapper.displayRates());
             return true;
         }

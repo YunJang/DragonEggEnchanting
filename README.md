@@ -1,6 +1,6 @@
 # DragonEggEnchanting - 1.8.x
 
-Current Version: 1.3.0
+Current Version: 1.4.0
 
 Written for our personal Minecraft server that is running Spigot 1.8.x. Spigot 1.8.1 API was used but it should work as long as Minecraft remains on version 1.8.
 
@@ -32,10 +32,16 @@ Features:
 	- Thorns X
 
 To-Do List:
++ Generate the config.yml -- not doing it correctly.
++ Polish the code up, it's pretty messy.
 - Change the name of the plugin to BetterEnchanting.
 - Add configuration support to handle more material addition along with success penalties.
 
 Changelog:
+- Version 1.4.0
+    - Typing the upgrade command now lists which enchantments are available to be upgraded.
+        - You can now select which enchantment you want to upgrade.
+    - Upgrading now takes levels in terms of experience points (so being past a certain level no longer wastes experience).
 - Version 1.3.0
     - Configuration support added to allow easier addition of enchantments and modifications to value tables.
     - Commands added:
